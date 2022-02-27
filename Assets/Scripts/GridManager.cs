@@ -4,7 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class GridManager : MonoBehaviour {
+public class GridManager : MonoBehaviour
+{
+    private static GridManager instance;
+    
     [SerializeField] private int _width, _height;
  
     [SerializeField] private Tile _tilePrefab;
@@ -14,10 +17,23 @@ public class GridManager : MonoBehaviour {
  
     private Dictionary<Vector2, Tile> _tiles;
     private Dictionary<Vector2, Ball> _ball;
- 
-    void Start() {
+
+    public Vector2 startPos;
+    public Vector2 endPos;
+
+    void Start()
+    {
+        instance = this;
         GenerateGrid();
         GenerateBall();
+
+        startPos = new Vector2(-1, -1);
+        endPos = new Vector2(-1, -1);
+    }
+
+    public static GridManager GetInstance()
+    {
+        return instance;
     }
  
     void GenerateGrid() {
@@ -28,7 +44,7 @@ public class GridManager : MonoBehaviour {
                 spawnedTile.name = $"Tile {x} {y}";
  
                 var isOffset = (x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0);
-                spawnedTile.Init(isOffset);
+                spawnedTile.Init(new Vector2(x,y),isOffset);
  
  
                 _tiles[new Vector2(x, y)] = spawnedTile;
@@ -50,7 +66,7 @@ public class GridManager : MonoBehaviour {
                     var spawnedBall = Instantiate(_ballPrefab, new Vector3(x, y), Quaternion.identity);
                     spawnedBall.name = $"Ball {x} {y}";
                     
-                    spawnedBall.Init();
+                    spawnedBall.Init(new Vector2(x, y));
  
  
                     _ball[new Vector2(x, y)] = spawnedBall;
@@ -59,8 +75,23 @@ public class GridManager : MonoBehaviour {
         }
     }
  
-    // public Tile GetTileAtPosition(Vector2 pos) {
-    //     if (_tiles.TryGetValue(pos, out var tile)) return tile;
-    //     return null;
-    // }
+    public Tile GetTileAtPosition(Vector2 pos) {
+        if (_tiles.TryGetValue(pos, out var tile)) return tile;
+        return null;
+    }
+    
+    public Ball GetBallAtPosition(Vector2 pos) {
+        if (_ball.TryGetValue(pos, out var ball)) return ball;
+        return null;
+    }
+
+    public void MoveBallToNewPos(Vector2 from, Vector2 to)
+    {
+        if (_ball.TryGetValue(from, out var ball))
+        {
+            ball.transform.position = new Vector3(to.x, to.y);
+            _ball.Add(to, ball);
+            _ball.Remove(from);
+        }
+    }
 }
