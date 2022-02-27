@@ -17,6 +17,11 @@ public class GridManager : MonoBehaviour
  
     private Dictionary<Vector2, Tile> _tiles;
     private Dictionary<Vector2, Ball> _ball;
+    
+    public Node[,] Grid;
+    public List<Node> path;
+
+    public Pathfinding2D finder;
 
     public Vector2 startPos;
     public Vector2 endPos;
@@ -35,8 +40,22 @@ public class GridManager : MonoBehaviour
     {
         return instance;
     }
+
+    public void ClearHighlight()
+    {
+        for (int x = 0; x < _width; x++)
+        {
+            for (int y = 0; y < _height; y++)
+            {
+                Grid[x, y].tile.SetHighlight(false);   
+            }
+        }
+    }
  
     void GenerateGrid() {
+        Grid = new Node[_width, _height];
+        
+        
         _tiles = new Dictionary<Vector2, Tile>();
         for (int x = 0; x < _width; x++) {
             for (int y = 0; y < _height; y++) {
@@ -45,8 +64,9 @@ public class GridManager : MonoBehaviour
  
                 var isOffset = (x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0);
                 spawnedTile.Init(new Vector2(x,y),isOffset);
- 
- 
+                
+                Grid[x, y] = new Node(false, spawnedTile, x, y);
+
                 _tiles[new Vector2(x, y)] = spawnedTile;
             }
         }
@@ -67,6 +87,8 @@ public class GridManager : MonoBehaviour
                     spawnedBall.name = $"Ball {x} {y}";
                     
                     spawnedBall.Init(new Vector2(x, y));
+                    
+                    Grid[x, y].SetObstacle(true);
  
  
                     _ball[new Vector2(x, y)] = spawnedBall;
@@ -92,6 +114,35 @@ public class GridManager : MonoBehaviour
             ball.transform.position = new Vector3(to.x, to.y);
             _ball.Add(to, ball);
             _ball.Remove(from);
+            
+            // TODO: set obstacle here
+            Grid[(int)from.x, (int)from.y].SetObstacle(false);
+            Grid[(int)to.x, (int)to.y].SetObstacle(true);
         }
     }
+    
+    
+    
+    public List<Node> GetNeighbors(Node node)
+    {
+        List<Node> neighbors = new List<Node>();
+
+        //checks and adds top neighbor
+        if (node.GridX >= 0 && node.GridX < _width && node.GridY + 1 >= 0 && node.GridY + 1 < _height)
+            neighbors.Add(Grid[node.GridX, node.GridY + 1]);
+
+        //checks and adds bottom neighbor
+        if (node.GridX >= 0 && node.GridX < _width && node.GridY - 1 >= 0 && node.GridY - 1 < _height)
+            neighbors.Add(Grid[node.GridX, node.GridY - 1]);
+
+        //checks and adds right neighbor
+        if (node.GridX + 1 >= 0 && node.GridX + 1 < _width && node.GridY >= 0 && node.GridY < _height)
+            neighbors.Add(Grid[node.GridX + 1, node.GridY]);
+
+        //checks and adds left neighbor
+        if (node.GridX - 1 >= 0 && node.GridX - 1 < _width && node.GridY >= 0 && node.GridY < _height)
+            neighbors.Add(Grid[node.GridX - 1, node.GridY]);
+        return neighbors;
+    }
+
 }

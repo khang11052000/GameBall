@@ -14,12 +14,37 @@ public class Tile : MonoBehaviour {
     }
  
     void OnMouseEnter() {
-        _highlight.SetActive(true);
+        //_highlight.SetActive(true);
+
+        if (GridManager.GetInstance().startPos == new Vector2(-1, -1))
+        {
+            return;
+        }
+        
+        // clear path
+        GridManager.GetInstance().ClearHighlight();
+
+        bool hasPath = GridManager.GetInstance().finder.FindPath(GridManager.GetInstance().startPos, pos);
+
+        if (!hasPath)
+        {
+            return;
+        }
+        
+        foreach (var node in GridManager.GetInstance().path)
+        {
+            node.tile.SetHighlight(true);
+        }
     }
  
     void OnMouseExit()
     {
-        _highlight.SetActive(false);
+        // _highlight.SetActive(false);
+    }
+
+    public void SetHighlight(bool val)
+    {
+        _highlight.SetActive(val);
     }
     
     private void OnMouseUp()
@@ -37,13 +62,22 @@ public class Tile : MonoBehaviour {
             {
                 return;
             }
-            
-            GridManager.GetInstance().endPos = pos;
 
-            GridManager.GetInstance().MoveBallToNewPos(GridManager.GetInstance().startPos, GridManager.GetInstance().endPos);
 
-            GridManager.GetInstance().startPos = new Vector2(-1, -1);
-            GridManager.GetInstance().endPos = new Vector2(-1, -1);
+
+            bool hasPath = GridManager.GetInstance().finder.FindPath(GridManager.GetInstance().startPos, pos);
+                
+            if (hasPath)
+            {
+                GridManager.GetInstance().endPos = pos;
+
+                GridManager.GetInstance().MoveBallToNewPos(GridManager.GetInstance().startPos, GridManager.GetInstance().endPos);
+
+                GridManager.GetInstance().startPos = new Vector2(-1, -1);
+                GridManager.GetInstance().endPos = new Vector2(-1, -1);
+                
+                GridManager.GetInstance().ClearHighlight();
+            }
         }
 
 
