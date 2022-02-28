@@ -10,7 +10,7 @@ public class Ball : MonoBehaviour
     [SerializeField] private SpriteRenderer _renderer;
     private Vector2 pos;
 
-    public void Init(Vector2 _pos)
+    public Color Init(Vector2 _pos)
     {
         int randomColor = Random.Range(0, 3);
         if (randomColor == 0)
@@ -27,5 +27,7 @@ public class Ball : MonoBehaviour
         }
 
         pos = _pos;
+
+        return _renderer.color;
     }
 }

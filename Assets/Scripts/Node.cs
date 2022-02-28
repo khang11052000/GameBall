@@ -4,6 +4,7 @@ public class Node
 {
     public int gCost, hCost;
     public bool obstacle;
+    public Color color { get; set; }
     public Tile tile;
     public int GridX, GridY;
     public Node parent;

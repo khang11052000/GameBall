@@ -72,7 +72,7 @@ public class Pathfinding2D : MonoBehaviour
                 }
             }
             
-            Debug.Log("can't find path");
+            // Debug.Log("can't find path");
         }
 
         return false;
