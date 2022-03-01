@@ -8,6 +8,10 @@ public class GridManager : MonoBehaviour
 {
     private static GridManager instance;
 
+    private int maxBall = 0;
+    
+    public GameOverScreen GameOverScreen;
+
     [SerializeField] private int _width, _height;
 
     [SerializeField] private Tile _tilePrefab;
@@ -63,9 +67,9 @@ public class GridManager : MonoBehaviour
         {
             for (int y = 0; y < _height; y++)
             {
+                //var colorBall = Ball.
                 var spawnedTile = Instantiate(_tilePrefab, new Vector3(x, y), Quaternion.identity);
                 spawnedTile.name = $"Tile {x} {y}";
-
                 var isOffset = (x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0);
                 spawnedTile.Init(new Vector2(x, y), isOffset);
 
@@ -88,6 +92,7 @@ public class GridManager : MonoBehaviour
                 var randomBall = Random.Range(0, 6);
                 if (randomBall == 3)
                 {
+                    maxBall++;
                     var spawnedBall = Instantiate(_ballPrefab, new Vector3(x, y), Quaternion.identity);
                     spawnedBall.name = $"Ball {x} {y}";
 
@@ -115,14 +120,13 @@ public class GridManager : MonoBehaviour
                     if (Grid[x, y].obstacle)
                         continue;
 
-                    var randomBall = Random.Range(0, 10);
+                    var randomBall = Random.Range(0, 20);
                     if (count < 3)
                     {
                         if (randomBall == 3)
                         {
                             // Debug.Log(new Vector2(x, y));
-
-
+                            maxBall++;
                             var spawnedBall = Instantiate(_ballPrefab, new Vector3(x, y), Quaternion.identity);
                             spawnedBall.name = $"Ball New {x} {y}";
 
@@ -201,7 +205,7 @@ public class GridManager : MonoBehaviour
 
     public List<Node> CheckLine(int iCenter, int jCenter)
     {
-        Debug.Log(Grid[iCenter, jCenter].color);
+        
         List<Node> lines = new List<Node>();
 
 
@@ -258,15 +262,27 @@ public class GridManager : MonoBehaviour
                 }
             }
         }
-
+        //Debug.Log(Grid[iCenter, jCenter].color);
+        //Debug.Log($"Line: {line.GridX} {line.GridY}");
 
         if (count > 0)
         {
             lines.Add(Grid[iCenter, jCenter]);
-            Debug.Log("hihi");
+            //Debug.Log("hihi");
+            
         }
 
         return lines;
+    }
+
+    private void Update()
+    {
+        if (maxBall > 132)
+        {
+            GameOverScreen.Setup();
+            Debug.Log("haha");
+        }
+        Debug.Log(maxBall);
     }
 
 

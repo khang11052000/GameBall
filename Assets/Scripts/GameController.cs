@@ -1,19 +1,23 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    private bool _gamePlaying;
-    void Start()
+    public GameOverScreen GameOverScreen;
+    private int maxBall;
+    public void GameOver()
     {
-        BeginGame();
+        GameOverScreen.Setup();
     }
 
-    public void BeginGame()
+    private void Update()
     {
-        _gamePlaying = true;
+        // if (GridManager.GetInstance().maxBall > 135)
+        // {
+        //     GameOver();
+        // }
         
-        TimeController.instance.BeginTimer();
     }
 }

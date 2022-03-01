@@ -6,8 +6,9 @@ using Random = UnityEngine.Random;
 
 public class Ball : MonoBehaviour
 {
+
     [SerializeField] private Color _redColor, _bluColor, _yellowColor;
-    [SerializeField] private SpriteRenderer _renderer;
+    [SerializeField] public SpriteRenderer _renderer;
     private Vector2 pos;
 
     public Color Init(Vector2 _pos)

@@ -93,6 +93,8 @@ public class Tile : MonoBehaviour {
                 var lines = GridManager.GetInstance().CheckLine((int) pos.x, (int) pos.y);
                 foreach (var line in lines)
                 {
+                 
+                    
                     Debug.Log($"Line: {line.GridX} {line.GridY}");
 
                     // GridManager.GetInstance().DestroyBall((int) line.GridX, (int) line.GridY);

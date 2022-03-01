@@ -15,6 +15,7 @@ public class Node
         GridX = _gridX;
         GridY = _gridY;
         tile = _tile;
+        //color = _color;
     }
 
     public int FCost
