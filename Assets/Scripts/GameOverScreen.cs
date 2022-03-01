@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameOverScreen : MonoBehaviour
 {
@@ -14,5 +15,15 @@ public class GameOverScreen : MonoBehaviour
         TimeController.instance.EndTimer();
         //pointsText.text = score.ToString() + " POINTS";
         timerText.text = TimeController.instance.timeCounter.text;
+    }
+
+    public void RestartButton()
+    {
+        SceneManager.LoadScene("Game");
+    }
+
+    public void ExitButtoon()
+    {
+        Application.Quit();
     }
 }

@@ -277,12 +277,11 @@ public class GridManager : MonoBehaviour
 
     private void Update()
     {
-        if (maxBall > 132)
+        if (maxBall > 32)
         {
             GameOverScreen.Setup();
-            Debug.Log("haha");
         }
-        Debug.Log(maxBall);
+        //Debug.Log(maxBall);
     }
 
 
